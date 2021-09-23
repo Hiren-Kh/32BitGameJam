@@ -1,24 +1,32 @@
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class Player : MonoBehaviour
  {
     #region PUBLIC_VARS
-    public float moveSpeed;
-    public float rotationSpeed;
+    public Health health;
+    public float moveSpeed = 10f;
+    public float rotationSpeed = 5f;
     #endregion
 
     #region PRIVATE_VARS
     private float horizontalMovement;
     private float verticalMovement;
-    private Vector3 limit;
-    private Vector3 targetPos;
+    //private Vector3 limit;
+    //private Vector3 targetPos;
+
+    
     #endregion
 
     #region UNITY_CALLBACKS
     private void Update()
     {
-        horizontalMovement = Input.GetAxis("Horizontal");
-        verticalMovement = Input.GetAxis("Vertical");
+        horizontalMovement = Input.GetAxis(Constants.HORIZONTAL);
+        verticalMovement = Input.GetAxis(Constants.VERTICAL);
+
+        if(Input.GetKeyDown(KeyCode.D))
+        {
+            Damage(15);
+        }
     }
 
     private void FixedUpdate()
@@ -49,7 +57,7 @@ public class PlayerMovement : MonoBehaviour
         transform.Rotate(transform.up * horizontalMovement * rotationSpeed);
     }
 
-    private void ClampPosition()
+    /*private void ClampPosition()
     {
         targetPos = transform.position;
 
@@ -57,6 +65,11 @@ public class PlayerMovement : MonoBehaviour
         targetPos.z = Mathf.Clamp(targetPos.z, -limit.z, limit.z);
 
         transform.position = targetPos;
+    }*/
+
+    private void Damage(float value)
+    {
+        health.takeDamage(value);
     }
     #endregion
 

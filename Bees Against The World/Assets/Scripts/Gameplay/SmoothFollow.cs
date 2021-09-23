@@ -15,8 +15,11 @@ public class SmoothFollow : MonoBehaviour
     #region UNITY_CALLBACKS
     private void FixedUpdate()
     {
-        HandleMovememt();
-        HandleRotation();
+        if(target != null)
+        {
+            HandleMovememt();
+            HandleRotation();
+        }
     }
     #endregion
 
