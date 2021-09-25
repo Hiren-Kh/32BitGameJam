@@ -20,7 +20,7 @@ public class Health : MonoBehaviour
     #endregion
 
     #region PUBLIC_FUNCTIONS
-    public void takeDamage(float damage)
+    public bool takeDamage(float damage)
     {
         currentHealthPoint -= damage;
 
@@ -29,7 +29,9 @@ public class Health : MonoBehaviour
         if (currentHealthPoint <= 0f)
         {
             Die();
+            return true;
         }
+        return false;
     }
 
     #endregion

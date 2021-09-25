@@ -6,15 +6,18 @@ public class Player : MonoBehaviour
     public Health health;
     public float moveSpeed = 10f;
     public float rotationSpeed = 5f;
+    public LayerMask targetMask;
+    public float attackRange;
+    public float timeBetweenAttacks;
+    public float damageAmount;
     #endregion
 
     #region PRIVATE_VARS
     private float horizontalMovement;
     private float verticalMovement;
+    private bool canAttack = true;
     //private Vector3 limit;
     //private Vector3 targetPos;
-
-    
     #endregion
 
     #region UNITY_CALLBACKS
@@ -23,9 +26,15 @@ public class Player : MonoBehaviour
         horizontalMovement = Input.GetAxis(Constants.HORIZONTAL);
         verticalMovement = Input.GetAxis(Constants.VERTICAL);
 
-        if(Input.GetKeyDown(KeyCode.D))
+        if(Input.GetKeyDown(KeyCode.Space) && canAttack)
         {
-            Damage(15);
+            canAttack = false;
+            RaycastHit[] targets = Physics.SphereCastAll(transform.position, attackRange, Vector3.up, attackRange, targetMask);
+            if(targets.Length > 0)
+            {
+                Attack(targets[0].transform.GetComponent<Health>());
+                Invoke("ResetAttack", timeBetweenAttacks);
+            }
         }
     }
 
@@ -57,6 +66,16 @@ public class Player : MonoBehaviour
         transform.Rotate(transform.up * horizontalMovement * rotationSpeed);
     }
 
+    private void Attack(Health helath)
+    {
+        helath.takeDamage(damageAmount);
+    }
+
+    private void ResetAttack()
+    {
+        canAttack = true;
+    }
+
     /*private void ClampPosition()
     {
         targetPos = transform.position;
@@ -66,11 +85,6 @@ public class Player : MonoBehaviour
 
         transform.position = targetPos;
     }*/
-
-    private void Damage(float value)
-    {
-        health.takeDamage(value);
-    }
     #endregion
 
     #region CO-ROUTINES
