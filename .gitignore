@@ -61,3 +61,4 @@ crashlytics-build.properties
 Bees Against The World/Temp/
 Bees Against The World/Logs/
 Bees Against The World/Library/
+*.meta
