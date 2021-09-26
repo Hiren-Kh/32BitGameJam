@@ -77,7 +77,7 @@ public class AiMovement : MonoBehaviour
         switch(state)
         {
             case StateType.ROAMING:
-                Patroling();
+                Roaming();
                 break;
 
             case StateType.CHASING:
@@ -112,7 +112,7 @@ public class AiMovement : MonoBehaviour
     #endregion
 
     #region PRIVATE_FUNCTIONS
-    private void Patroling()
+    private void Roaming()
     {
         target = null;
         if(!isWalkpointSet)
