@@ -16,8 +16,8 @@ public class Player : MonoBehaviour
     private float horizontalMovement;
     private float verticalMovement;
     private bool canAttack = true;
-    //private Vector3 limit;
-    //private Vector3 targetPos;
+    [SerializeField] private Vector3 limit;
+    private Vector3 targetPos;
     #endregion
 
     #region UNITY_CALLBACKS
@@ -25,11 +25,12 @@ public class Player : MonoBehaviour
     {
         horizontalMovement = Input.GetAxis(Constants.HORIZONTAL);
         verticalMovement = Input.GetAxis(Constants.VERTICAL);
+        ClampPosition();
 
         if(Input.GetKeyDown(KeyCode.Space) && canAttack)
         {
             canAttack = false;
-            RaycastHit[] targets = Physics.SphereCastAll(transform.position, attackRange, Vector3.up, attackRange, targetMask);
+            RaycastHit[] targets = Physics.SphereCastAll(transform.position, attackRange, Vector3.up, 500f, targetMask);
             if(targets.Length > 0)
             {
                 Attack(targets[0].transform.GetComponent<Health>());
@@ -48,6 +49,12 @@ public class Player : MonoBehaviour
         {
             Rotate();
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
     #endregion
 
@@ -76,7 +83,7 @@ public class Player : MonoBehaviour
         canAttack = true;
     }
 
-    /*private void ClampPosition()
+    private void ClampPosition()
     {
         targetPos = transform.position;
 
@@ -84,7 +91,7 @@ public class Player : MonoBehaviour
         targetPos.z = Mathf.Clamp(targetPos.z, -limit.z, limit.z);
 
         transform.position = targetPos;
-    }*/
+    }
     #endregion
 
     #region CO-ROUTINES

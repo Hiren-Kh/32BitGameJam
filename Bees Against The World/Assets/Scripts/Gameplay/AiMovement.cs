@@ -11,7 +11,8 @@ public class AiMovement : MonoBehaviour
     public float sightRange;
     public float attackRange;
     [Header("Check Vars")]
-    public LayerMask targetMask, groundMask;
+    public LayerMask targetMask;
+    public LayerMask groundMask;
     public bool targetInSightRange, targetInAttackRange, isBeingAttacked;
     public bool isBee;
     [Header("Abilities Vars")]
@@ -64,7 +65,7 @@ public class AiMovement : MonoBehaviour
             if(target == null)
             {
                 RaycastHit[] targets = Physics.SphereCastAll(transform.position, sightRange, Vector3.up, sightRange, targetMask);
-                target = targets[0].transform;
+                target = targets[Random.Range(0,targets.Length)].transform;
             }
 
             state = StateType.CHASING;
@@ -109,6 +110,7 @@ public class AiMovement : MonoBehaviour
     #endregion
 
     #region PUBLIC_FUNCTIONS
+ 
     #endregion
 
     #region PRIVATE_FUNCTIONS
@@ -166,16 +168,16 @@ public class AiMovement : MonoBehaviour
         if (!isAlreadyAttacked)
         {
             //Attack
-
-            bool isDied = target.GetComponent<Health>().takeDamage(damageAmount);
-            if(isDied)
-            {
-                target = null;
-                state = StateType.ROAMING;
-            }
-
             isAlreadyAttacked = true;
             Invoke("ResetAttack", timeBetweenAttack);
+
+            if(target == null)
+            {
+                state = StateType.ROAMING;
+                return;
+            }
+            target.GetComponent<Health>().takeDamage(damageAmount);
+
         }
     }
 

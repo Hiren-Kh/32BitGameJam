@@ -20,7 +20,7 @@ public class Health : MonoBehaviour
     #endregion
 
     #region PUBLIC_FUNCTIONS
-    public bool takeDamage(float damage)
+    public void takeDamage(float damage)
     {
         currentHealthPoint -= damage;
 
@@ -29,9 +29,7 @@ public class Health : MonoBehaviour
         if (currentHealthPoint <= 0f)
         {
             Die();
-            return true;
         }
-        return false;
     }
 
     #endregion
@@ -42,10 +40,12 @@ public class Health : MonoBehaviour
         Debug.Log("Die");
         if(gameObject.CompareTag(Constants.PLAYER))
         {
-            gameObject.SetActive(false);
+            var obj = Instantiate(transform, new Vector3(0,1,0), Quaternion.identity);
+            Camera.main.GetComponent<SmoothFollow>().target = obj;
+            DestroyImmediate(gameObject);
             return;
         }
-
+        Spawner.Instance.Spawn(transform);
         Destroy(gameObject);
     }
     #endregion
